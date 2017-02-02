@@ -8,24 +8,27 @@ class BilleteraElectronica:
         self.PIN=PIN
         self.recargas=[]
         self.consumos=[]
+        self.balance=0
         
     def saldo(self):
-        abonado=0
-        for recarga in self.recargas:
-            abonado=abonado+recarga.monto
-        deuda=0
-        for consumo in self.consumos:
-            deuda=deuda+consumo.monto
-        return abonado-deuda
+        return self.balance
     
     def recargar(self,nuevarecarga):
-        self.recargas.append(nuevarecarga)
+        if (nuevarecarga.monto>0):
+            self.recargas.append(nuevarecarga)
+            self.balance=self.balance+nuevarecarga.monto
+        else:
+            print("No puede haber una recarga negativa")
 
     def consumir(self,nuevoconsumo,PIN):
         if (PIN==self.PIN):
-            if (self.saldo>nuevoconsumo.monto):
-                self.consumos.append(nuevoconsumo)
+            if (self.saldo()>nuevoconsumo.monto):
+                if (nuevoconsumo.monto>0):
+                    self.consumos.append(nuevoconsumo)
+                    self.balance=self.balance-nuevoconsumo.monto
+                else:
+                    print("No puede haber un consumo negativo")
             else:
                 print("Saldo Insuficiente")
         else:
-            print("PIN Erróneo")
+            print("PIN Erroneo")
